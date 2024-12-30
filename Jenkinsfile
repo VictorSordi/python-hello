@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         TAG = sh(script: 'git describe --abbrev=0', returnStdout: true).trim()
+        COVERAGE_FILE = '/dev/null'
     }
 
     stages {
@@ -21,7 +22,7 @@ pipeline {
         stage('Run Tests with Coverage') {
             steps {
                 script {
-                    sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} python -m pytest --cov=app --cov-report=xml:coverage.xml'
+                    sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} python -m pytest -v --cov=app --cov-report=xml:/app/coverage.xml'
                 }
             }
         }
