@@ -22,6 +22,7 @@ pipeline {
         stage('Run Tests with Coverage') {
             steps {
                 script {
+                    sh 'chmod -R 777 ${WORKSPACE}/'
                     sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} python -m pytest -v --cov=app --cov-report=xml:/app/coverage.xml'
                 }
             }
