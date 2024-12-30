@@ -21,7 +21,7 @@ pipeline {
         stage('Run Tests with Coverage') {
             steps {
                 script {
-                    sh 'docker run --rm -v $(pwd):/app python-hello/app:${TAG} pytest --cov=app --cov-report=xml:coverage.xml'
+                    sh 'docker run --rm -v $(pwd):/app python-hello/app:${TAG} python -m pytest --cov=app --cov-report=xml:coverage.xml'
                 }
             }
         }
