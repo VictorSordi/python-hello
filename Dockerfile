@@ -2,10 +2,10 @@ FROM python:3.9
 
 WORKDIR /app
 
-ADD app.py .
+COPY app.py .
 
-RUN pip install requests beautifulsoup4 python-dotenv
+RUN pip install beautifulsoup4 python-dotenv requests
 
 EXPOSE 8080
 
-CMD [“python”, “./app.py”] 
+CMD ["python", "./app.py"]
