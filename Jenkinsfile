@@ -11,12 +11,6 @@ pipeline {
             sh 'docker build -t python-hello/app:${TAG} .'
             }
         }
-    
-        stage ('deploy docker compose'){
-        steps{
-            sh 'docker compose up --build -d'
-            }
-        }
 
         stage('sleep for container deploy'){
         steps{
@@ -29,7 +23,7 @@ pipeline {
                 script{
                     scannerHome = tool 'sonar-scanner';
                 }
-                withSonarQubeEnv('sonar-server1'){
+                withSonarQubeEnv('sonar-server'){
                     sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=python-hello -Dsonar.sources=. -Dsonar.host.url=${env.SONAR_HOST_URL} -Dsonar.token=${env.SONAR_AUTH_TOKEN} -X"
                 }
                 sh 'sleep 10'
@@ -41,12 +35,6 @@ pipeline {
                 timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
-            }
-        }
-
-        stage('Shutdown docker containers') {
-            steps{
-                sh 'docker compose down'
             }
         }
 
