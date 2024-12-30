@@ -22,6 +22,7 @@ pipeline {
             steps {
                 script {
                     sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} bash -c "cd /app && pytest --cov=app --cov-report=xml:/app/coverage.xml"'
+                    sh 'cp ${WORKSPACE}/app/coverage.xml ${WORKSPACE}/coverage.xml'
                 }
             }
         }
@@ -38,7 +39,7 @@ pipeline {
                         -Dsonar.sources=. \
                         -Dsonar.host.url=${env.SONAR_HOST_URL} \
                         -Dsonar.token=${env.SONAR_AUTH_TOKEN} \
-                        -Dsonar.python.coverage.reportPaths=coverage.xml \
+                        -Dsonar.python.coverage.reportPaths=${WORKSPACE}/coverage.xml \
                         -X
                     """
                 }
