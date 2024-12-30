@@ -2,44 +2,60 @@ pipeline {
     agent any
 
     environment {
-        TAG = sh(script: 'git describe --abbrev=0',,returnStdout: true).trim()
+        TAG = sh(script: 'git describe --abbrev=0', returnStdout: true).trim()
     }
 
     stages {
-        stage('build docker image'){
-        steps{
-            sh 'docker build -t python-hello/app:${TAG} .'
+        stage('Checkout') {
+            steps {
+                checkout scm
             }
         }
 
-        stage('sleep for container deploy'){
-        steps{
-            sh 'sleep 10'
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t python-hello/app:${TAG} .'
             }
         }
 
-        stage('Sonarqube validation'){
-            steps{
-                script{
-                    scannerHome = tool 'sonar-scanner';
+        stage('Run Tests with Coverage') {
+            steps {
+                script {
+                    sh 'docker run --rm -v $(pwd):/app python-hello/app:${TAG} pytest --cov=app --cov-report=xml:coverage.xml'
                 }
-                withSonarQubeEnv('sonar-server'){
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=python-hello -Dsonar.sources=. -Dsonar.host.url=${env.SONAR_HOST_URL} -Dsonar.token=${env.SONAR_AUTH_TOKEN} -X"
+            }
+        }
+
+        stage('SonarQube Validation') {
+            steps {
+                script {
+                    scannerHome = tool 'sonar-scanner'
+                }
+                withSonarQubeEnv('sonar-server') {
+                    sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=python-hello \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=${env.SONAR_HOST_URL} \
+                        -Dsonar.token=${env.SONAR_AUTH_TOKEN} \
+                        -Dsonar.python.coverage.reportPaths=coverage.xml \
+                        -X
+                    """
                 }
                 sh 'sleep 10'
             }
         }
 
-        stage("Quality Gate"){
-            steps{
+        stage("Quality Gate") {
+            steps {
                 timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
         }
 
-        stage('Upload docker image'){
-            steps{
+        stage('Upload Docker Image') {
+            steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'nexus-user', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh 'docker login -u $USERNAME -p $PASSWORD ${NEXUS_URL}'
@@ -50,8 +66,8 @@ pipeline {
             }
         }
 
-        stage("Apply kubernetes files"){
-            steps{
+        stage("Apply Kubernetes Files") {
+            steps {
                 sh '/usr/local/bin/kubectl apply -f ./kubernetes/app.yaml'
             }
         }
