@@ -30,7 +30,7 @@ pipeline {
                     scannerHome = tool 'sonar-scanner';
                 }
                 withSonarQubeEnv('sonar-server1'){
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=dev-notes -Dsonar.sources=. -Dsonar.host.url=${env.SONAR_HOST_URL} -Dsonar.token=${env.SONAR_AUTH_TOKEN} -X"
+                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=python-hello -Dsonar.sources=. -Dsonar.host.url=${env.SONAR_HOST_URL} -Dsonar.token=${env.SONAR_AUTH_TOKEN} -X"
                 }
                 sh 'sleep 10'
             }
