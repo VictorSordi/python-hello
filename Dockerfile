@@ -3,7 +3,7 @@ FROM python:3.9
 RUN useradd -m appuser && \
     mkdir /app && \
     chown -R appuser:appuser /app && \
-    pip install --no-cache-dir beautifulsoup4 python-dotenv requests pytest pytest-cov
+    pip install --no-cache-dir beautifulsoup4 pytest pytest-cov python-dotenv requests
 
 WORKDIR /app
 
