@@ -1,16 +1,15 @@
 FROM python:3.9
 
-# Criando um usuário, diretório e instalando as dependências
 RUN useradd -m appuser && \
     mkdir /app && \
     chown -R appuser:appuser /app && \
-    pip install beautifulsoup4 python-dotenv requests pytest pytest-cov
+    pip install --no-cache-dir beautifulsoup4 python-dotenv requests pytest pytest-cov
 
 WORKDIR /app
 
-COPY . .
+COPY /app/app.py /app/
 
-ENV PYTHONPATH=/app:$PYTHONPATH
+COPY /app/test_app.py /app/
 
 RUN chown -R appuser:appuser /app
 
