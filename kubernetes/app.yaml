@@ -13,6 +13,7 @@ spec:
       labels:
         app: python-hello
     spec:
+      automountServiceAccountToken: false
       containers:
       - name: python-hello
         image: python-hello/app:v1.0.0
@@ -20,9 +21,11 @@ spec:
           requests:
             memory: "64Mi"
             cpu: "100m"
+            ephemeral-storage: "2Gi"
           limits:
             memory: "128Mi"
             cpu: "500m"
+            ephemeral-storage: "4Gi"
         ports:
         - containerPort: 8080
 
