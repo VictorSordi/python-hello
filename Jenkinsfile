@@ -12,12 +12,6 @@ pipeline {
             }
         }
 
-        stage('Fix Permissions') {
-            steps {
-                sh 'chmod -R u+rw ${WORKSPACE}'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t python-hello/app:${TAG} .'
@@ -27,8 +21,7 @@ pipeline {
         stage('Run Tests with Coverage') {
             steps {
                 script {
-                    sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} bash -c "chmod -R u+rw /app && python -m pytest --cov=app --cov-report=xml:/app/coverage.xml"'
-                }
+                    sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} python -m pytest --cov=app --cov-report=xml:/app/coverage.xml'                }
             }
         }
 
