@@ -1,19 +1,7 @@
-# Print Hello from the current OS and architecture
-#
-# python hello_world.py
-
-
 import platform
 
+os_name = platform.system()
+architecture = platform.architecture()
 
-if __name__ == '__main__':
-    # Get the operating system name
-    os_name = platform.system()
-
-    # Get the system's architecture
-    architecture = platform.architecture()
-
-    print(f"Hello Wordl! from {os_name} operating system on {
-          architecture[0]} {architecture[1]} architecture")
-else:
-    pass
+print(f"Hello World! from {os_name} operating system on {
+      architecture[0]} {architecture[1]} architecture")
