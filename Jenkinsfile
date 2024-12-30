@@ -3,13 +3,18 @@ pipeline {
 
     environment {
         TAG = sh(script: 'git describe --abbrev=0', returnStdout: true).trim()
-        COVERAGE_FILE = '/dev/null'
     }
 
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Fix Permissions') {
+            steps {
+                sh 'chmod -R u+rw ${WORKSPACE}'
             }
         }
 
@@ -22,8 +27,7 @@ pipeline {
         stage('Run Tests with Coverage') {
             steps {
                 script {
-                    sh 'chmod -R 777 ${WORKSPACE}/'
-                    sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} python -m pytest -v --cov=app --cov-report=xml:/app/coverage.xml'
+                    sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} bash -c "chmod -R u+rw /app && python -m pytest --cov=app --cov-report=xml:/app/coverage.xml"'
                 }
             }
         }
