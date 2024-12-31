@@ -7,7 +7,7 @@ RUN useradd -m appuser && \
 
 WORKDIR /app
 
-COPY . /app/
+COPY . .
 
 RUN chown -R appuser:appuser /app
 
