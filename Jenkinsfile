@@ -20,12 +20,13 @@ pipeline {
 
         stage('Run Tests with Coverage') {
             steps {
-                script {
-                    sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} bash -c "cd /app && pytest --cov=app --cov-report=xml:coverage.xml"'
-                    sh 'ls -la ${WORKSPACE}/coverage.xml'  
-                }
+            script {
+                sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} bash -c "cd /app && pytest --cov=app --cov-report=xml:/app/coverage.xml"'
+                sh 'ls -la ${WORKSPACE}/coverage.xml'
             }
         }
+    }
+
 
         stage('SonarQube Validation') {
             steps {
