@@ -9,7 +9,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN chown -R appuser:appuser /app
+RUN chown -R appuser:appuser .
 
 USER appuser
 
