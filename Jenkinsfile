@@ -36,7 +36,7 @@ pipeline {
                     sh """
                         ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=python-hello \
-                        -Dsonar.sources=app \
+                        -Dsonar.sources=. \
                         -Dsonar.host.url=${env.SONAR_HOST_URL} \
                         -Dsonar.token=${env.SONAR_AUTH_TOKEN} \
                         -Dsonar.python.coverage.reportPaths=${WORKSPACE}/coverage.xml \
