@@ -21,7 +21,7 @@ pipeline {
         stage('Run Tests with Coverage') {
             steps {
                 script {
-                    sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} bash -c "cd /app && pytest --cov=app --cov-report=xml:/app/coverage.xml"'
+                    sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} bash -c "cd /app && pytest --cov=app --cov-report=xml:/app/coverage.xml --tb=short"'
                     sh 'ls -la ${WORKSPACE}/coverage.xml'  
                 }
             }
@@ -36,7 +36,7 @@ pipeline {
                     sh """
                         ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=python-hello \
-                        -Dsonar.sources=. \
+                        -Dsonar.sources=app \
                         -Dsonar.host.url=${env.SONAR_HOST_URL} \
                         -Dsonar.token=${env.SONAR_AUTH_TOKEN} \
                         -Dsonar.python.coverage.reportPaths=${WORKSPACE}/coverage.xml \
