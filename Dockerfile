@@ -7,9 +7,7 @@ RUN useradd -m appuser && \
 
 WORKDIR /app
 
-COPY /app/app.py /app/
-
-COPY /app/test_app.py /app/
+COPY . /app/
 
 RUN chown -R appuser:appuser /app
 
