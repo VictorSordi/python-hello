@@ -22,6 +22,7 @@ pipeline {
             steps {
             script {
                 sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} bash -c "cd /app && pytest --cov=app --cov-report=xml:/app/coverage.xml"'
+                sh 'docker run --rm -v ${WORKSPACE}:/app python-hello/app:${TAG} bash -c "ls -la /app"'
                 sh 'ls -la ${WORKSPACE}/coverage.xml'
             }
         }
